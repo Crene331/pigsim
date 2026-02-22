@@ -1,0 +1,345 @@
+/* 基础复位 */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a;
+  color: #eeeeee;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #1a1a1a;
+}
+
+/* 封面、故事、结局、死亡、事件通用全屏弹窗 */
+.screen {
+  max-width: 500px;
+  width: 90%;
+  padding: 40px;
+  background: #2a2a2a;
+  border-radius: 25px;
+  border: 4px solid #ffb6c1;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 输入框样式 */
+.input-box {
+  margin: 25px 0;
+  font-size: 1.2rem;
+}
+
+.input-box input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #ffb6c1;
+  background: #333;
+  color: #fff;
+  width: 120px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* 主按钮样式 */
+.main-btn {
+  background: #ffb6c1;
+  color: #000;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 0 #db95a1;
+}
+
+.main-btn:hover {
+  background: #ffd1dc;
+  transform: translateY(-2px);
+}
+
+.main-btn:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+/* 游戏主布局 */
+.game-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 900px;
+  width: 95%;
+  background: #252525;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid #444;
+}
+
+/* 左侧状态栏 */
+.status-panel {
+  flex: 1;
+  min-width: 280px;
+  text-align: left;
+  border-right: 1px solid #444;
+  padding-right: 20px;
+}
+
+.pig-name {
+  color: #ffb6c1;
+  margin-top: 0;
+  font-size: 1.8rem;
+}
+
+.stage-tag {
+  display: inline-block;
+  background: #444;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  color: #ffb6c1;
+  margin-bottom: 15px;
+}
+
+.age-bar, .ap-bar {
+  margin: 10px 0;
+  font-weight: bold;
+  color: #aaa;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.stat {
+  background: #333;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  border-bottom: 3px solid #222;
+}
+
+.stat.warn {
+  color: #ff4757;
+  border-color: #ff4757;
+  animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* 右侧行动面板 */
+.action-panel {
+  flex: 1.5;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.action-panel button {
+  width: 100%;
+  margin: 6px 0;
+  padding: 14px 10px;
+  border-radius: 10px;
+  border: none;
+  background: #e0e0e0;
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.action-panel button:hover {
+  background: #fff;
+  filter: brightness(1.1);
+}
+
+.btn-explore { background: #ff9f43 !important; color: white !important; }
+.btn-read { background: #2e86de !important; color: white !important; }
+.btn-mi { 
+  background: #ff9ff3 !important; 
+  color: white !important;
+  animation: miGlow 1.5s infinite alternate;
+}
+
+@keyframes miGlow {
+  from { box-shadow: 0 0 5px #ff9ff3; }
+  to { box-shadow: 0 0 20px #ff9ff3; }
+}
+
+/* 日志窗口 */
+.log-window {
+  margin-top: auto;
+  background: #000;
+  color: #00ff00;
+  height: 140px;
+  padding: 15px;
+  font-family: 'Courier New', monospace;
+  text-align: left;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  overflow-y: hidden;
+  border: 1px solid #333;
+}
+
+.log-header {
+  color: #888;
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #222;
+  padding-bottom: 4px;
+}
+
+.log-line {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+/* 事件面板特化 */
+.event-panel {
+  background: #2c3e50;
+  border-color: #f1c40f;
+}
+
+.event-badge {
+  background: #f1c40f;
+  color: #000;
+  padding: 3px 12px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.event-desc {
+  font-style: italic;
+  color: #ecf0f1;
+  margin: 25px 0;
+  line-height: 1.7;
+}
+
+.choice-list button {
+  background: #ffffff;
+  margin: 10px 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.choice-list button:hover {
+  background: #f1c40f;
+}
+
+/* 物品与特殊状态 */
+.inventory {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #444;
+  font-size: 0.9rem;
+  color: #63cdda;
+}
+
+.mi-found {
+  margin-top: 10px;
+  color: #ff9ff3;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(255, 159, 243, 0.5);
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+  .game-layout {
+    flex-direction: column;
+  }
+  .status-panel {
+    border-right: none;
+    border-bottom: 1px solid #444;
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+  .btn-disabled {
+  background-color: #ccc !important;
+  color: #666 !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 甚至可以加个警告动画 */
+.stat.warn {
+  color: #ff4d4f;
+  font-weight: bold;
+  animation: shake 0.5s infinite;
+}
+.milestone {
+  border: 3px solid #ffd700; /* 金色边框 */
+  background: linear-gradient(145deg, #fffcf0, #fff);
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bonus {
+  color: #e67e22;
+  font-weight: bold;
+  font-size: 1.1rem;
+  background: #fdf2e9;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+/* 针对手机端的优化 */
+@media (max-width: 600px) {
+  .game-layout {
+    flex-direction: column; /* 改为上下排列 */
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .status-panel, .action-panel {
+    width: 100%; /* 宽度撑满 */
+    min-width: unset;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr); /* 属性表改为两列，更整齐 */
+    gap: 8px;
+  }
+
+  .action-panel button {
+    padding: 12px; /* 增大点击区域，方便手指操作 */
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+  }
+
+  .log-window {
+    height: 120px; /* 缩小日志窗口高度，节省空间 */
+  }
+
+  .screen {
+    width: 90%;
+    padding: 15px;
+  }
+  
+  h1 { font-size: 1.5rem; }
+}
+}
