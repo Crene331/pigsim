@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import './App.css'
-
 // --- 1. 必须在组件外部定义事件库，确保变量在加载时就存在 ---
 const EVENT_POOL = {
   kid: [ // 0-7岁：好奇心、身体发育、探索本能
@@ -27,15 +26,40 @@ const EVENT_POOL = {
         { text: "当成窝垫 (康+15 智-5)", effect: (p) => ({ ...p, health: p.health + 15, iq: p.iq - 5 }), log: "这是你睡过最香的一个午觉。" },
         { text: "撕碎研究 (奇+25 智+10)", effect: (p) => ({ ...p, curious: p.curious + 25, iq: p.iq + 10 }), log: "你拆解了编织结构，明白了什么是‘经纬’。" }
       ]
+    },
+    // ----- 新增童年事件 -----
+    {
+      title: "会唱歌的小溪",
+      desc: "水槽的水管破了，水流在地上冲出了一条小沟渠。",
+      options: [
+        { text: "跳水坑 (康+10 奇+20)", effect: (p) => ({ ...p, health: p.health + 10, curious: p.curious + 20 }), log: "你学会了猪刨式，虽然姿势不太雅观。" },
+        { text: "修好它 (智+20 重-5)", effect: (p) => ({ ...p, iq: p.iq + 20, weight: p.weight - 5 }), log: "你用嘴巴把水管叼回了原位，感觉自己是个工程师。" }
+      ]
+    },
+    {
+      title: "月光下的影子",
+      desc: "月光把你的影子拉得很长，你动它也动。",
+      options: [
+        { text: "和影子打架 (重+10 魅-5)", effect: (p) => ({ ...p, weight: p.weight + 10, charm: p.charm - 5 }), log: "你气喘吁吁，发现永远打不过它。" },
+        { text: "思考光学原理 (智+25)", effect: (p) => ({ ...p, iq: p.iq + 25 }), log: "你隐约明白了光的直线传播，虽然还不会说这个词。" }
+      ]
+    },
+    {
+      title: "咪的尾巴",
+      desc: "农场里的猫‘咪’在晒太阳，尾巴在你面前晃来晃去。",
+      options: [
+        { text: "一把抓住 (奇+20 康-20)", effect: (p) => ({ ...p, curious: p.curious + 20, health: p.health - 20 }), log: "猫回头给了你一爪子，你明白了什么叫‘老虎屁股摸不得’。" },
+        { text: "静静看着 (智+10 魅+15)", effect: (p) => ({ ...p, iq: p.iq + 10, charm: p.charm + 15 }), log: "你在想，你也会遇到你的咪吗" }
+      ]
     }
   ],
   teen: [ // 8-15岁：社交欲望、叛逆、体格增长
     {
-      title: "隔壁的漂亮住",
-      desc: "隔壁猪圈新来了一位气质不凡的同类，你感觉心跳加快。",
+      title: "思考未来",
+      desc: "未来会不会有一种技术，会让机器人说话呢",
       options: [
-        { text: "展示才华 (智+20 魅+20)", effect: (p) => ({ ...p, iq: p.iq + 20, charm: p.charm + 20 }), log: "你背诵了一段人类的菜单，对方觉得你博学多才。" },
-        { text: "分享零食 (重-10 魅+30)", effect: (p) => ({ ...p, weight: p.weight - 10, charm: p.charm + 30 }), log: "虽然肚子空了，但你赢得了对方的好感。" }
+        { text: "继续探索 (智+20)", effect: (p) => ({ ...p, iq: p.iq + 20 }), log: "你尝试学习计算机知识" },
+        { text: "不再思考 (健康+100)", effect: (p) => ({ ...p, health: p.health + 100 }), log: "放弃卷是对的，躺平捏" }
       ]
     },
     {
@@ -48,13 +72,30 @@ const EVENT_POOL = {
     },
     {
       title: "猪圈领袖挑战",
-      desc: "一群中住正在选老大，大家都在看你。",
+      desc: "一群中猪正在选老大，大家都在看你。",
       options: [
         { text: "武力压制 (重+20 康-10 魅+10)", effect: (p) => ({ ...p, weight: p.weight + 20, health: p.health - 10, charm: p.charm + 10 }), log: "你靠块头赢得了尊重，但身上留下了疤痕。" },
         { text: "智慧调停 (智+30 魅+20)", effect: (p) => ({ ...p, iq: p.iq + 30, charm: p.charm + 20 }), log: "你成功平息了纠纷，成为了军师级的人物。" }
       ]
-    }
-  ],
+    },
+    // ----- 新增少年事件 -----
+    {
+      title: "母猪们的八卦",
+      desc: "几位长辈在角落里议论新来的饲养员，说他的发型很奇怪。",
+      options: [
+        { text: "参与八卦 (魅+15 重+10)", effect: (p) => ({ ...p, charm: p.charm + 15, weight: p.weight + 10 }), log: "你学会了社交的快乐，但也没少吃人家递过来的零食。" },
+        { text: "特立独行 (智+20 奇+15)", effect: (p) => ({ ...p, iq: p.iq + 20, curious: p.curious + 15 }), log: "你觉得谈论外表很无聊，不如去研究那个自动喂食器的原理。" }
+      ]
+    },
+    {
+      title: "秋千轮胎",
+      desc: "一棵树上挂着一个旧轮胎，风一吹就晃。",
+      options: [
+        { text: "跳进去玩 (康+15 奇+15)", effect: (p) => ({ ...p, health: p.health + 15, curious: p.curious + 15 }), log: "你发现了推力和摆动的奥秘，玩得不亦乐乎。" },
+        { text: "挑战咬断绳子 (重+5 康-10)", effect: (p) => ({ ...p, weight: p.weight + 5, health: p.health - 10 }), log: "绳子没断，你的牙差点断了。" }
+      ]
+    }],
+
   adult: [ // 16-23岁：追求真理、权力、代码真相
     {
       title: "权力的诱惑",
@@ -65,19 +106,44 @@ const EVENT_POOL = {
       ]
     },
     {
-      title: "终极真相的碎片",
-      desc: "你无意间看到农场主的电脑屏幕，上面写着你的名字和‘删除’字样。",
+      title: "螺蛳粉的诱惑",
+      desc: "你今天突然特别想吃螺蛳粉",
       options: [
-        { text: "骇入系统 (智+50 康-20)", effect: (p) => ({ ...p, iq: p.iq + 20, health: p.health - 10 }), log: "你试图修改自己的代码，感觉意识正在数字化。" },
-        { text: "坦然面对 (魅+30 智+20)", effect: (p) => ({ ...p, charm: p.charm + 30, iq: p.iq + 20 }), log: "如果生命只是代码，那也要活得精彩。" }
+        { text: "立刻去吃 (体重+20)", effect: (p) => ({ ...p,weight: p.weight + 20}), log: "螺蛳粉真的太好吃了。" },
+        { text: "克制 (智+20)", effect: (p) => ({ ...p, iq: p.iq + 20 }), log: "蒸蚌" }
       ]
     },
     {
       title: "蓝色药丸",
       desc: "食槽边躺着一颗闪烁蓝光的胶囊，这看起来不像是食物。",
       options: [
-        { text: "吞下它 (智+60 康-30 奇+30)", effect: (p) => ({ ...p, iq: p.iq + 20, health: p.health - 10, curious: p.curious + 10 }), log: "你的眼中出现了极光，那一刻你看到了网页的源代码。" },
+        { text: "吞下它 (智+20 康-10 奇+10)", effect: (p) => ({ ...p, iq: p.iq + 20, health: p.health - 10, curious: p.curious + 10 }), log: "你的眼中出现了极光，你有一种异样的感觉。" },
         { text: "无视它 (魅+20 康+20)", effect: (p) => ({ ...p, charm: p.charm + 20, health: p.health + 20 }), log: "你想起‘咪’的教导，平凡也是一种力量。" }
+      ]
+    },
+    // ----- 新增成年事件 -----
+    {
+      title: "天空的裂缝",
+      desc: "你抬头看天，突然发现云层后面似乎有一些奇怪的绿色代码在流动，转瞬即逝。",
+      options: [
+        { text: "深入研究 (智+50 奇+30)", effect: (p) => ({ ...p, iq: p.iq + 50, curious: p.curious + 30 }), log: "你开始坚信这个世界是虚拟的，并尝试寻找更多证据。" },
+        { text: "认为眼花了 (康+30)", effect: (p) => ({ ...p, health: p.health + 30 }), log: "你摇了摇头，觉得是最近没睡好，不如多睡一会儿。" }
+      ]
+    },
+    {
+      title: "AI养猪",
+      desc: "农场引进了全自动智能喂养系统，摄像头精准识别每一头猪。",
+      options: [
+        { text: "对抗系统 (奇+40 康-20)", effect: (p) => ({ ...p, curious: p.curious + 40, health: p.health - 20 }), log: "你试图用泥巴遮住身上的识别编码，但差点被当成病猪隔离。" },
+        { text: "顺应系统 (魅+30 重+15)", effect: (p) => ({ ...p, charm: p.charm + 30, weight: p.weight + 15 }), log: "你学会了在镜头前表现得温顺可爱，总能多吃一份加餐。" }
+      ]
+    },
+    {
+      title: "远方的卡车声",
+      desc: "你听到远处传来巨大的卡车引擎声，空气中隐约有血腥味。老猪们脸色凝重。",
+      options: [
+        { text: "领导反抗 (魅+40 康-30)", effect: (p) => ({ ...p, charm: p.charm + 40, health: p.health - 30 }), log: "你号召大家越狱，但响应者寥寥，你被关进了单独的隔间。" },
+        { text: "最后的晚餐 (重+50)", effect: (p) => ({ ...p, weight: p.weight + 50 }), log: "你预感到了什么，决定吃顿好的。这顿饭格外的香。" }
       ]
     }
   ]
@@ -110,7 +176,7 @@ export default function App() {
   const triggerRandomEvent = (p) => {
     let pool;
     // 根据当前 pig 的年龄选择对应的事件池
-    if (p.age < 8) pool = EVENT_POOL.kid;
+    if (p.age < 5) pool = EVENT_POOL.kid;
     else if (p.age < 16) pool = EVENT_POOL.teen;
     else pool = EVENT_POOL.adult;
 
@@ -207,7 +273,7 @@ export default function App() {
         setGameState('death');
       } else {
         // 使用传递进去的 p，而不是全局 pig
-        setTimeout(() => triggerRandomEvent(p), 500);
+       if(p.age/2 === 1) setTimeout(() => triggerRandomEvent(p), 500);
       }
     }
 
@@ -372,7 +438,7 @@ if (gameState === 'milestone500') return (
     <div className="game-layout">
       <div className="status-panel">
         <h2 className="pig-name">{playerName}住</h2>
-        <div className="stage-tag">{pig.age < 8 ? '幼年期' : pig.age < 16 ? '青春期' : '成熟期'}</div>
+        <div className="stage-tag">{pig.age < 5 ? '幼年期' : pig.age < 16 ? '青春期' : '成熟期'}</div>
         <div className="age-bar">进度: {pig.age} / 23 年</div>
         <div className="ap-bar">体力值: {Array(pig.ap).fill('⚡').join(' ')}</div>
         
@@ -405,7 +471,7 @@ if (gameState === 'milestone500') return (
 
   <button onClick={() => handleAction('roll')}>打滚 (+10奇 -5康)</button>
         
-        {pig.age >= 8 && (
+        {pig.age >= 5 && (
     <button 
       className={pig.full < 30 ? 'btn-disabled' : 'btn-explore'}
       disabled={pig.full < 30}
