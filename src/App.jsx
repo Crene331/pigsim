@@ -273,7 +273,7 @@ export default function App() {
         setGameState('death');
       } else {
         // 使用传递进去的 p，而不是全局 pig
-       if(p.age % 2 === 1 ) setTimeout(() => triggerRandomEvent(p), 500);
+       setTimeout(() => triggerRandomEvent(p), 500);
       }
     }
 
